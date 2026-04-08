@@ -32,7 +32,7 @@ class <?= $className; ?> extends Model
      * @var <?= implode('|', $property['types']) . "\n"; ?>
      * @see <?= $property['see'] . "\n"; ?>
      */
-    public $<?= $property['name'] ?>;
+    public <?= implode('|', $property['types']); ?> $<?= $property['name'] ?>;
 
 <?php endforeach; ?>
 }

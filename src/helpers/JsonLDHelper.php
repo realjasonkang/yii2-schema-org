@@ -29,13 +29,13 @@ class JsonLDHelper
     /**
      * @var Model[] Keeps schema org models wich will be displayed on page
      */
-    private static $_models = [];
+    private static array $_models = [];
 
     /**
      * Adds BreadcrumbList schema.org markup based on the application view `breadcrumbs` parameter
      * @throws \yii\base\InvalidConfigException
      */
-    public static function addBreadCrumbList()
+    public static function addBreadCrumbList(): void
     {
         if (!class_exists('\simialbi\yii2\schemaorg\models\BreadcrumbList')) {
             return;
@@ -78,7 +78,7 @@ class JsonLDHelper
      *
      * @param Model $model
      */
-    public static function add(Model $model)
+    public static function add(Model $model): void
     {
         self::$_models[] = $model;
     }
@@ -88,7 +88,7 @@ class JsonLDHelper
      *
      * @param boolean $merge
      */
-    public static function render(bool $merge = false)
+    public static function render(bool $merge = false): void
     {
         if (!empty(self::$_models)) {
             if ($merge) {

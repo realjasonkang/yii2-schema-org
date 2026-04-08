@@ -8,7 +8,7 @@ use yii\helpers\FileHelper;
 
 class HelperTest extends TestCase
 {
-    public function testAutoRender()
+    public function testAutoRender(): void
     {
         $this->mockApplication();
 
@@ -54,7 +54,7 @@ JSONLD;
         $this->assertStringContainsString($expected, $content);
     }
 
-    public function testAutoCreate()
+    public function testAutoCreate(): void
     {
         $this->mockApplication();
 
@@ -98,7 +98,7 @@ JSONLD;
         $this->assertFileDoesNotExist(Yii::getAlias('@simialbi/yii2/schemaorg/models/ListItem.php'));
     }
 
-    public function testMerged()
+    public function testMerged(): void
     {
         $this->mockApplication();
 

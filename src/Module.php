@@ -28,22 +28,22 @@ class Module extends \yii\base\Module implements BootstrapInterface
     /**
      * @var boolean automatically add ld+json data for breadcrumbs
      */
-    public $autoCreate = false;
+    public bool $autoCreate = false;
 
     /**
      * @var boolean automatically render ld+json data at the end of body
      */
-    public $autoRender = false;
+    public bool $autoRender = false;
 
     /**
      * @var boolean merge models into one script tag
      */
-    public $mergeModels = false;
+    public bool $mergeModels = false;
 
     /**
      * @inheritdoc
      */
-    public function bootstrap($app)
+    public function bootstrap($app): void
     {
         if ($app instanceof \yii\console\Application) {
             $this->controllerNamespace = 'simialbi\yii2\schemaorg\commands';

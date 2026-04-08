@@ -9,7 +9,7 @@ use Yii;
  */
 class GenerationTest extends TestCase
 {
-    public function testGeneration()
+    public function testGeneration(): void
     {
         $this->mockApplication();
 
@@ -24,7 +24,7 @@ class GenerationTest extends TestCase
 
         $classes = glob(Yii::getAlias('@runtime/generated/*.php'));
 
-        $this->assertEquals(892, count($classes));
+        $this->assertEquals(924, count($classes));
 
         foreach ($classes as $class) {
             require $class;
@@ -34,7 +34,7 @@ class GenerationTest extends TestCase
         }
     }
 
-    public function testFilter()
+    public function testFilter(): void
     {
         $this->mockApplication();
 

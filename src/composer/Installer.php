@@ -19,7 +19,7 @@ class Installer
      * @param Event $event
      * @since 2.0.5
      */
-    public static function postInstallUpdate(Event $event)
+    public static function postInstallUpdate(Event $event): void
     {
         static::runCommands($event, __METHOD__);
     }
@@ -30,7 +30,7 @@ class Installer
      * @param Event $event
      * @param string $extraKey
      */
-    protected static function runCommands(Event $event, string $extraKey)
+    protected static function runCommands(Event $event, string $extraKey): void
     {
         $params = $event->getComposer()->getPackage()->getExtra();
         if (isset($params[$extraKey]) && is_array($params[$extraKey])) {
@@ -53,7 +53,7 @@ class Installer
      * @throws \yii\base\InvalidRouteException
      * @throws \Exception
      */
-    public static function generateModels(array $config)
+    public static function generateModels(array $config): void
     {
         $schemas = ArrayHelper::getValue($config, 'schemas', []);
         $namespace = ArrayHelper::getValue($config, 'namespace', 'simialbi\yii2\schemaorg\models');

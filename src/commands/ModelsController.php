@@ -39,27 +39,27 @@ class ModelsController extends Controller
     /**
      * @var array The schemas requested by the user
      */
-    public $schemas = [];
+    public array $schemas = [];
 
     /**
      * @var string The namespace for generated classes and traits
      */
-    public $namespace = 'simialbi\yii2\schemaorg\models';
+    public string $namespace = 'simialbi\yii2\schemaorg\models';
 
     /**
      * @var string The target folder for generated classes and traits
      */
-    public $folder = '@simialbi/yii2/schemaorg/models';
+    public string $folder = '@simialbi/yii2/schemaorg/models';
 
     /**
      * @var boolean Wether to remove old files before re-generating
      */
-    public $removeOld = false;
+    public bool $removeOld = false;
 
     /**
      * @var array Classes not to generate
      */
-    public $blackList = ['Class', 'Boolean', 'Date', 'DateTime', 'Float', 'Number', 'Text', 'Time'];
+    public array $blackList = ['Class', 'Boolean', 'Date', 'DateTime', 'Float', 'Number', 'Text', 'Time'];
 
     /**
      * Generates the user-requested schemas along with all required traits
@@ -231,6 +231,18 @@ class ModelsController extends Controller
             if (is_array($comment) && isset($comment['@value'])) {
                 $comment = $comment['@value'];
             }
+
+            // Add array type to properties that may be arrays
+            $class['properties'] = ArrayHelper::index(ArrayHelper::getValue($class, 'properties', []), 'name');
+            foreach ($class['properties'] as $k => $property) {
+                foreach ($property['types'] as $type) {
+                    if (ctype_upper($type[0])) {
+                        $class['properties'][$k]['types'][] = 'array';
+                        continue 2;
+                    }
+                }
+            }
+
             $contents = $this->renderPartial('class', [
                 'namespace' => $this->namespace,
                 'description' => preg_replace(
@@ -240,7 +252,7 @@ class ModelsController extends Controller
                 ),
                 'className' => $className,
                 'label' => $label,
-                'properties' => ArrayHelper::index(ArrayHelper::getValue($class, 'properties', []), 'name')
+                'properties' => $class['properties']
             ]);
             if (false !== file_put_contents($this->folder . '/' . $className . '.php', $contents)) {
                 $this->stdout("*** class {$this->namespace}\\$className created", Console::FG_GREEN);
@@ -281,26 +293,14 @@ class ModelsController extends Controller
     {
         $type = str_replace('schema:', '', $type);
 
-        switch ($type) {
-            case 'URL':
-            case 'Text':
-            case 'Date':
-            case 'DateTime':
-            case 'Time':
-                return 'string';
-            case 'Number':
-                return 'float';
-            case 'Integer':
-                return 'int';
-            case 'Class':
-                return 'ModelClass';
-            case 'Boolean':
-            case 'True':
-            case 'False':
-                return 'bool';
-        }
-
-        return $type;
+        return match ($type) {
+            'URL', 'Text', 'Date', 'DateTime', 'Time' => 'string',
+            'Number' => 'float',
+            'Integer' => 'int',
+            'Class' => 'ModelClass',
+            'Boolean', 'True', 'False' => 'bool',
+            default => $type
+        };
     }
 
     /**
@@ -310,7 +310,7 @@ class ModelsController extends Controller
      * @param array|null $allClasses
      * @throws \Exception
      */
-    private function traverseClasses(array &$classes, ?array $allClasses = null)
+    private function traverseClasses(array &$classes, ?array $allClasses = null): void
     {
         if ($allClasses === null) {
             $allClasses = $classes;

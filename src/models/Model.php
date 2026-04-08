@@ -19,7 +19,7 @@ class Model extends \yii\base\Model
     /**
      * @var string identifier of this model (rendered as @id)
      */
-    public $id;
+    public string $id;
 
     /**
      * Converts the model into an array for usage in ld+json.
@@ -48,7 +48,7 @@ class Model extends \yii\base\Model
     /**
      * {@inheritDoc}
      */
-    public function toArray(array $fields = [], array $expand = [], $recursive = true)
+    public function toArray(array $fields = [], array $expand = [], $recursive = true): array
     {
         $array = array_filter(parent::toArray($fields, $expand, $recursive), function ($item) {
             return !is_null($item);
